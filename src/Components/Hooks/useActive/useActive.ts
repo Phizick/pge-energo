@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-export const useActive = (): [string | null, React.Dispatch<React.SetStateAction<string | null>>] => {
+export const useActive = (setAsRead: (id: string) => void): [string | null, React.Dispatch<React.SetStateAction<string | null>>] => {
     const [activeElementId, setActiveElementId] = useState<string | null>(null);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
+            e.preventDefault();
             if (e.code === "Space" && activeElementId) {
+                setAsRead(activeElementId);
                 setActiveElementId(null);
             }
         }
@@ -15,7 +17,7 @@ export const useActive = (): [string | null, React.Dispatch<React.SetStateAction
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [activeElementId]);
+    }, [activeElementId, setAsRead]);
 
     return [activeElementId, setActiveElementId];
 }

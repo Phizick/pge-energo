@@ -1,12 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from "styled-components";
 import { Checkbox } from 'primereact/checkbox';
-
 import { Card } from 'primereact/card';
-import {tableArr} from "../../App";
-import {NEUTRAL_DARKSNOW, NEUTRAL_LIGHT, NEUTRAL_SNOWWHITE} from "../../Constants/Colors/Colors";
 import {useRead} from "../Hooks/useRead/useRead";
 import {useActive} from "../Hooks/useActive/useActive";
+
+interface Data {
+    id: string;
+    date: string;
+    importance: string;
+    equipment: string;
+    message: string;
+    responsible: string;
+    avatar: string;
+}
+
+interface CardComponentProps {
+    data: Data[];
+}
 
 
 const CardsContainer = styled.div`
@@ -27,7 +38,7 @@ const CardContainer = styled.div<{ isRead: boolean }>`
     width: 250px;
     margin: 10px;
     transition: transform .3s ease-out;
-    background-color: ${(props) => props.isRead ? NEUTRAL_LIGHT : NEUTRAL_DARKSNOW};
+    background-color: ${(props) => props.isRead ? "var(--blue-50)" : "var(--blue-100)"};
   }
 
   .p-card:hover {
@@ -38,27 +49,10 @@ const CardContainer = styled.div<{ isRead: boolean }>`
 `;
 
 
-export const CardComponent = () => {
+const CardComponent: React.FC<CardComponentProps> = ({ data }) => {
     const [checked, setChecked] = useState<Record<string, boolean>>({});
-    const [activeElementId, setActiveElementId] = useActive();
     const [read, setAsRead] = useRead();
-
-
-    // useEffect(() => {
-    //     function handleKeyDown(e: KeyboardEvent) {
-    //
-    //         if (e.code === "Space" && activeCardId) {
-    //             setRead(prev => ({ ...prev, [activeCardId]: true }));
-    //             e.preventDefault();
-    //         }
-    //     }
-    //
-    //     window.addEventListener('keydown', handleKeyDown);
-    //
-    //     return () => {
-    //         window.removeEventListener('keydown', handleKeyDown);
-    //     };
-    // }, [activeCardId]);
+    const [activeElementId, setActiveElementId] = useActive(setAsRead);
 
     const handleCheckboxChange = (e: { checked?: boolean }, id: string) => {
         setChecked(prev => ({ ...prev, [id]: !!e.checked }));
@@ -68,29 +62,17 @@ export const CardComponent = () => {
         e.stopPropagation();
     };
 
-    // const handleCardClick = (id: string) => {
-    //     setActiveCardId(id);
-    //     setRead(prev => ({...prev, [id]: true}));
-    // }
-    //
-    //
-    // const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    //     if ((e.key === ' ' || e.key === 'Spacebar') && activeCardId) {
-    //         setRead(prev => ({...prev, [activeCardId]: true}));
-    //         e.preventDefault();
-    //         setActiveCardId(null);
-    //     }
-    // }
-
     const handleCardClick = (id: string) => {
         setAsRead(id);
-    }
+        setActiveElementId(null);
+    };
 
 
     return (
         <CardsContainer>
-            {tableArr.map((item, idx) => (
+            {data.map((item: any, idx: any) => (
                 <CardContainer
+                    key={item.id}
                     onClick={() => handleCardClick(item.id)}
                     isRead={read[item.id]}
                     onMouseEnter={() => setActiveElementId(item.id)}
@@ -127,3 +109,5 @@ export const CardComponent = () => {
         </CardsContainer>
     )
 }
+
+export default CardComponent
