@@ -27,8 +27,10 @@ type ContentComponentProps = {
     rowsTable: number;
     rowsCard: number;
     totalRecords: number;
-    onChange: (event: { first: number, rows: number }) => void;
-    first: number;
+    onChangeTable: (event: { first: number, rows: number }) => void;
+    onChangeCard: (event: { first: number, rows: number }) => void;
+    firstTable: number;
+    firstCard: number;
 };
 
 const HeaderContainer = styled.div`
@@ -49,7 +51,7 @@ const SearchContainer = styled.div`
 `;
 
 
-export const ContentComponent: React.FC<ContentComponentProps> = ({ onSearch, cardData, tableData,rowsTable, rowsCard, totalRecords, onChange, first }) => {
+export const ContentComponent: React.FC<ContentComponentProps> = ({ onSearch, cardData, tableData,rowsTable, rowsCard, totalRecords, onChangeCard, firstTable, firstCard, onChangeTable }) => {
     const [searchText, setSearchText] = useState('');
 
     const onSearchSubmit = useCallback(() => {
@@ -77,13 +79,13 @@ export const ContentComponent: React.FC<ContentComponentProps> = ({ onSearch, ca
     return (
         <HeaderContainer>
             <TabView renderActiveOnly={false}>
-                <TabPanel header={'Таблица'}>
+                <TabPanel header={'Таблица'} >
                     <TableComponent data={tableData}/>
-                    <Paginator first={first} rows={rowsTable} totalRecords={totalRecords} onPageChange={onChange}/>
+                    <Paginator first={firstTable} rows={rowsTable} totalRecords={totalRecords} onPageChange={onChangeTable}/>
                 </TabPanel>
                 <TabPanel header={'Карточки'}>
                     <CardComponent data={cardData}/>
-                    <Paginator first={first} rows={rowsCard} totalRecords={totalRecords} onPageChange={onChange}/>
+                    <Paginator first={firstCard} rows={rowsCard} totalRecords={totalRecords} onPageChange={onChangeCard}/>
                 </TabPanel>
             </TabView>
             <SearchContainer>

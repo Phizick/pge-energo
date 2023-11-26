@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fakerRU }  from '@faker-js/faker';
 import useWindowSize from "../Hooks/useWindowSize/useWindowSize";
-import {ContentComponent} from "../HeaderComponent/ContentComponent";
+import {ContentComponent} from "../ContentComponent/ContentComponent";
 
 
 interface Data {
@@ -19,17 +19,18 @@ const ArrayProvider: React.FC = () => {
     const [data, setData] = useState<Data[]>([]);
     const [tableData, setTableData] = useState<Data[]>([]);
     const [cardData, setCardData] = useState<Data[]>([]);
-    const [first, setFirst] = useState(0);
+    const [firstTable, setFirstTable] = useState(0);
+    const [firstCard, setFirstCard] = useState(0);
     let { height = 0 } = useWindowSize();
 
-    const rowHeight = 95;
+    const rowHeight = 105;
     const cardsCount = 12;
     const tableRows = Math.floor(height / rowHeight);
 
     const filterData = (searchText: string) => {
         const filtered = data.filter(item => item.message.includes(searchText));
-        setTableData(filtered.slice(first, first + tableRows));
-        setCardData(filtered.slice(first, first + cardsCount));
+        setTableData(filtered.slice(firstTable, firstTable + tableRows));
+        setCardData(filtered.slice(firstCard, firstCard + cardsCount));
     };
 
     const formatDate = (date: Date) => {
@@ -38,36 +39,55 @@ const ArrayProvider: React.FC = () => {
         const year = date.getFullYear();
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
-        return `${day}.${month}.${year}, ${hours}:${minutes}`
+        return `${day}.${month}.${year}, ${hours}:${minutes}`;
     };
 
     useEffect(() => {
-        const fetchData = () => {
-            const data = Array.from({length: 50}, (_, i) => {
+        const importanceLevels = ['высокая', 'низкая', 'критическая'];
+        let fakeIndex = 0;
+
+        const fetchData = (index: number) => {
+            const newData = Array.from({length: 3}, (_, i) => {
                 return {
-                    id: i.toString(),
+                    id: (index + i).toString(),
                     date: formatDate(new Date()),
-                    importance: '50',
+                    importance: importanceLevels[Math.floor(Math.random()*importanceLevels.length)],
                     equipment: fakerRU.commerce.productName(),
                     message: fakerRU.lorem.sentence(),
                     responsible: fakerRU.person.firstName(),
                     avatar: fakerRU.image.avatar(),
                 };
             });
+            setData(prevData => [...prevData, ...newData]);
+            filterData("");
+            fakeIndex += 3;
+        };
 
-            setData(data);
-            setTableData(data.slice(first, first + tableRows));
-            setCardData(data.slice(first, first + cardsCount));
-        }
+        fetchData(fakeIndex);
 
-        fetchData();
-    }, [first, tableRows]);
+        const intervalId = setInterval(() => {
+            if (fakeIndex < 120) {
+                fetchData(fakeIndex);
+            } else {
+                clearInterval(intervalId);
+            }
+        }, 3000);
 
-    console.log(tableData)
+        return () => clearInterval(intervalId);
+    }, [firstTable, tableRows]);
 
-    const onPageChange = (event: { first: number; rows: number; }) => {
-        setFirst(event.first);
-        filterData("");
+    useEffect(() => {
+        setCardData(data.slice(firstCard, firstCard + cardsCount));
+    }, [firstCard, cardsCount, data]);
+
+
+
+    const onPageChangeTable = (event: { first: number; rows: number; }) => {
+        setFirstTable(event.first);
+    };
+
+    const onPageChangeCard = (event: { first: number; rows: number; }) => {
+        setFirstCard(event.first);
     };
 
     return (
@@ -79,8 +99,10 @@ const ArrayProvider: React.FC = () => {
                 rowsTable={tableRows}
                 rowsCard={cardsCount}
                 totalRecords={data.length}
-                onChange={onPageChange}
-                first={first}
+                onChangeTable={onPageChangeTable}
+                onChangeCard={onPageChangeCard}
+                firstTable={firstTable}
+                firstCard={firstCard}
             />
         </div>
     );

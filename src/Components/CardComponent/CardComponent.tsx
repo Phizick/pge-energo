@@ -80,7 +80,7 @@ const Label = styled.label`
 const CardComponent: React.FC<CardComponentProps> = ({ data }) => {
     const [checked, setChecked] = useState<Record<string, boolean>>({});
     const [read, setAsRead] = useRead();
-    const [activeElementId, setActiveElementId] = useActive(setAsRead);
+    const [, setActiveElementId] = useActive(setAsRead);
 
     const handleCheckboxChange = (e: { checked?: boolean }, id: string) => {
         setChecked(prev => ({ ...prev, [id]: !!e.checked }));
@@ -127,7 +127,7 @@ const CardComponent: React.FC<CardComponentProps> = ({ data }) => {
                         </CardContent>
                         <div style={{ textAlign: 'center' }}>
                             {item.avatar && <img src={item.avatar} alt="Avatar" style={{ borderRadius: '50%', width: '48px', height: '48px' }} />}
-                            {/*использовался компонент Avatar из библиотеки, но он отрабатывает неккоректно, и не рендерит аватарки. хотя по коду должен обрабатывать нормально:*/}
+                            {/*использовался компонент Avatar из библиотеки, но он отрабатывает неккоректно, и не рендерит аватарки. хотя по коду под капотом должен обрабатывать нормально:*/}
                             {/*    var imageProps = utils.mergeProps({*/}
                             {/*    src: props.image,*/}
                             {/*    onError: onImageError*/}
