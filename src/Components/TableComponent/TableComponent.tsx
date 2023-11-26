@@ -62,15 +62,7 @@ const TableComponent: React.FC<CardComponentProps> = ({ data }) => {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [activeRowId]);
-    function dateTemplate(rowData: { id: string }) {
-        const date = new Date();
-        const dateStr = date.toLocaleString('ru-RU', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
-        return (
-            <div>
-                {dateStr}
-            </div>
-        );
-    }
+
     function getRowClass(rowData: { id: string }) {
         return { 'read-row': read[rowData.id], 'unread-row': !read[rowData.id] };
     }
@@ -79,10 +71,12 @@ const TableComponent: React.FC<CardComponentProps> = ({ data }) => {
         setRead({ ...read, [e.data.id]: true });
     };
 
-    const onPageChange = (event: any) => {
-        setFirst(event.first);
-        setRows(event.rows);
+    const dateStyle: React.CSSProperties = {
+        whiteSpace: 'nowrap',
+        width: 'max-content'
     };
+
+
     return (
         <>
             <GlobalStyle />
@@ -93,7 +87,7 @@ const TableComponent: React.FC<CardComponentProps> = ({ data }) => {
                                    onRowMouseEnter={(e) => setActiveRowId(e.data.id)}
                                    onRowMouseLeave={() => setActiveRowId(null)}
                         >
-                            <Column field="date" header="дата" body={dateTemplate}></Column>
+                            <Column field="date" header="дата" bodyStyle={dateStyle}></Column>
                             <Column field="importance" header="важность"></Column>
                             <Column field="equipment" header="оборудование"></Column>
                             <Column field="message" header="сообщение"></Column>

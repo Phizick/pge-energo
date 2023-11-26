@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.3.1"
+    "@faker-js/faker": "^8.3.1",
+    "vm-browserify": "^1.1.2"
   }
 }

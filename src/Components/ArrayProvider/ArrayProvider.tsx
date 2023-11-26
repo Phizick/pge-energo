@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { faker } from '@faker-js/faker';
+import { fakerRU }  from '@faker-js/faker';
 import CardComponent from '../CardComponent/CardComponent';
 import {Paginator} from "primereact/paginator";
 import TableComponent from "../TableComponent/TableComponent";
 import useWindowSize from "../Hooks/useWindowSize/useWindowSize";
-
+import {createContext} from "vm";
 
 interface Data {
     id: string;
@@ -20,15 +20,27 @@ interface DataProviderProps {
     viewType: 'card' | 'table';
 }
 
+export const DataContext = createContext((searchText: string) => {});
+
 
 const DataProvider: React.FC<DataProviderProps> = ({ viewType }) => {
     const [data, setData] = useState<Data[]>([]);
     const [first, setFirst] = useState(0);
     let { height = 0 } = useWindowSize();
-    const rowHeight = 100;
-    const cardRows = 9;
+    //задать высоту строк напрямую - костыльно, но танцевать с рефами для получения данных из библиотечного компонента в данном случае посчитал излишним
+    const rowHeight = 95;
+    const cardsCount = 12;
     const tableRows = Math.floor(height / rowHeight);
-    const [rows, setRows] = useState((viewType === 'card') ? cardRows : tableRows);
+    const [rows, setRows] = useState((viewType === 'card') ? cardsCount : tableRows);
+
+    const [filteredData, setFilteredData] = useState<Data[]>([]);
+
+    const filterData = (searchText: string) => {
+        const filtered = data.filter(item => item.message.includes(searchText));
+        setFilteredData(filtered);
+    };
+
+
 
     const formatDate = (date: Date) => {
         const day = date.getDate().toString().padStart(2, '0');
@@ -45,26 +57,27 @@ const DataProvider: React.FC<DataProviderProps> = ({ viewType }) => {
                 return {
                     id: i.toString(),
                     date: formatDate(new Date()),
-                    //задать высоту строк напрямую - костыльно, но танцевать с рефами для получения данных из библиотечного компонента - городить огороды
                     importance: '50',
-                    equipment: faker.commerce.productName(),
-                    message: faker.lorem.sentence(),
-                    responsible: faker.name.firstName(),
-                    avatar: faker.image.avatar(),
+                    equipment: fakerRU.commerce.productName(),
+                    message: fakerRU.lorem.sentence(),
+                    responsible: fakerRU.person.firstName(),
+                    avatar: fakerRU.image.avatar(),
                 };
             });
 
-            setData(data)
+            setData(data);
+            setFilteredData(data);
         }
 
         fetchData();
     }, []);
 
+
     useEffect(() => {
-        setRows((viewType === 'card') ? cardRows : tableRows);
+        setRows((viewType === 'card') ? cardsCount : tableRows);
     }, [viewType, height]);
 
-    const dataToDisplay = data.slice(first, first + rows);
+    const dataToDisplay = filteredData.slice(first, first + rows);
 
     const onPageChange = (event: { first: number; rows: number; }) => {
         setFirst(event.first);
@@ -72,11 +85,13 @@ const DataProvider: React.FC<DataProviderProps> = ({ viewType }) => {
     };
 
     return (
-        <div>
-            {viewType === 'card' && <CardComponent data={dataToDisplay} />}
-            {viewType === 'table' && <TableComponent data={dataToDisplay} />}
-            <Paginator first={first} rows={rows} totalRecords={data.length} onPageChange={onPageChange}/>
-        </div>
+        <DataContext.Provider value={{ filterData }}>
+            <div>
+                {viewType === 'card' && <CardComponent data={dataToDisplay}/>}
+                {viewType === 'table' && <TableComponent data={dataToDisplay}/>}
+                <Paginator first={first} rows={rows} totalRecords={data.length} onPageChange={onPageChange}/>
+            </div>
+        </DataContext.Provider>
     );
 };
 

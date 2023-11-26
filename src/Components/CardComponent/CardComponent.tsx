@@ -5,6 +5,7 @@ import { Card } from 'primereact/card';
 import {useRead} from "../Hooks/useRead/useRead";
 import {useActive} from "../Hooks/useActive/useActive";
 
+
 interface Data {
     id: string;
     date: string;
@@ -100,6 +101,12 @@ const CardComponent: React.FC<CardComponentProps> = ({ data }) => {
                         </div>
                         <div style={{ textAlign: 'center' }}>
                             {item.avatar && <img src={item.avatar} alt="Avatar" style={{ borderRadius: '50%', width: '48px', height: '48px' }} />}
+                            {/*использовался компонент Avatar из библиотеки, но он отрабатывает неккоректно, и не рендерит аватарки. хотя по коду должен обрабатывать нормально:*/}
+                            {/*    var imageProps = utils.mergeProps({*/}
+                            {/*    src: props.image,*/}
+                            {/*    onError: onImageError*/}
+                            {/*}, ptm('image'));*/}
+                            {/*{item.avatar &&<Avatar className="mr-2" size="xlarge" shape="circle" image={item.avatar} imageAlt="avatarImage"/>}*/}
                             <p>{item.responsible}</p>
                         </div>
                     </ContentContainer>

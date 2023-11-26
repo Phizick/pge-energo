@@ -5,8 +5,8 @@ export const useActive = (setAsRead: (id: string) => void): [string | null, Reac
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            e.preventDefault();
             if (e.code === "Space" && activeElementId) {
+                e.preventDefault();
                 setAsRead(activeElementId);
                 setActiveElementId(null);
             }
