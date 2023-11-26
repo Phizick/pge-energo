@@ -4,6 +4,7 @@ import { Checkbox } from 'primereact/checkbox';
 import { Card } from 'primereact/card';
 import {useRead} from "../Hooks/useRead/useRead";
 import {useActive} from "../Hooks/useActive/useActive";
+import {TEXT_STYLES} from "../../Constants/Typography/Typography";
 
 
 interface Data {
@@ -36,17 +37,43 @@ const CardContainer = styled.div<{ isRead: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 250px;
+    width: 380px;
     margin: 10px;
     transition: transform .3s ease-out;
-    background-color: ${(props) => props.isRead ? "var(--blue-50)" : "var(--blue-100)"};
+    background-color: ${(props) => props.isRead ? "var(--blue-50)" : "var(--blue-100)"};    
+    height: 180px;
   }
 
   .p-card:hover {
     cursor: pointer;
-    box-shadow: 0 64px 64px -48px rgba(31, 47, 70, 0.3);
+    box-shadow: 0 100px 75px -48px rgba(31, 47, 70, 0.3);
     transform: scale(1.1);
-  }
+  }  
+`;
+
+const CardContent = styled.div`
+    flex-grow: 1;
+    padding: 0;
+`;
+
+const TextContent = styled.p`
+    margin: 0;
+    padding-right: 10px;    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    ${Object.entries(TEXT_STYLES.TEXT_NORMAL).map(([key, value]) => `${key}: ${value};`).join('\n')}  
+`;
+
+const LabelContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    ${Object.entries(TEXT_STYLES.TEXT_NORMAL).map(([key, value]) => `${key}: ${value};`).join('\n')}
+`;
+
+const Label = styled.label`
+    display: flex;
+    gap: 15px;
 `;
 
 
@@ -80,25 +107,24 @@ const CardComponent: React.FC<CardComponentProps> = ({ data }) => {
                     onMouseLeave={() => setActiveElementId(null)}
                     tabIndex={0}
                 >
-                <Card
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '250px', margin: 10 }}>
+                <Card>
                     <ContentContainer>
-                        <div style={{ flexGrow: 1 }}>
-                            <h5>{item.date}</h5>
-                            <p>Message: {item.message}</p>
-                            <div>
-                                Importance:
-                                <label htmlFor={item.id} onClick={handleCheckboxClick}>
+                        <CardContent>
+                            <TextContent><b>Дата:</b> {item.date}</TextContent>
+                            <LabelContainer>
+                                <b>Важность:</b>
+                                <Label htmlFor={item.id} onClick={handleCheckboxClick}>
                                     <Checkbox
                                         inputId={item.id}
                                         onChange={(e) => handleCheckboxChange(e, item.id)}
                                         checked={checked[item.id] || false}
                                     />
                                     {item.importance}
-                                </label>
-                            </div>
-                            <p>Equipment: {item.equipment}</p>
-                        </div>
+                                </Label>
+                            </LabelContainer>
+                            <TextContent><b>Оборудование:</b> {item.equipment}</TextContent>
+                            <TextContent><b>Сообщение:</b> {item.message}</TextContent>
+                        </CardContent>
                         <div style={{ textAlign: 'center' }}>
                             {item.avatar && <img src={item.avatar} alt="Avatar" style={{ borderRadius: '50%', width: '48px', height: '48px' }} />}
                             {/*использовался компонент Avatar из библиотеки, но он отрабатывает неккоректно, и не рендерит аватарки. хотя по коду должен обрабатывать нормально:*/}

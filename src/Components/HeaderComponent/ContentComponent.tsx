@@ -67,16 +67,21 @@ export const ContentComponent: React.FC<ContentComponentProps> = ({ onSearch, ca
         }
     }, [onSearchSubmit]);
 
+    const resetSearch = useCallback(() => {
+        setSearchText('');
+        onSearch('');
+    }, [onSearch]);
+
 
 
     return (
         <HeaderContainer>
             <TabView renderActiveOnly={false}>
-                <TabPanel header={'String'}>
+                <TabPanel header={'Таблица'}>
                     <TableComponent data={tableData}/>
                     <Paginator first={first} rows={rowsTable} totalRecords={totalRecords} onPageChange={onChange}/>
                 </TabPanel>
-                <TabPanel header={'string2'}>
+                <TabPanel header={'Карточки'}>
                     <CardComponent data={cardData}/>
                     <Paginator first={first} rows={rowsCard} totalRecords={totalRecords} onPageChange={onChange}/>
                 </TabPanel>
@@ -84,9 +89,10 @@ export const ContentComponent: React.FC<ContentComponentProps> = ({ onSearch, ca
             <SearchContainer>
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText value={searchText} onChange={onSearchChange} placeholder="Search" onKeyDown={onEnterPress} />
+                    <InputText value={searchText} onChange={onSearchChange} placeholder="Поиск..." onKeyDown={onEnterPress} />
                 </span>
                 <Button label='Поиск' onClick={onSearchSubmit}></Button>
+                <Button label='Сбросить поиск' onClick={resetSearch}></Button>
             </SearchContainer>
         </HeaderContainer>
     )
