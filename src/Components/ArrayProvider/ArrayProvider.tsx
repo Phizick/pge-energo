@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fakerRU }  from '@faker-js/faker';
-import CardComponent from '../CardComponent/CardComponent';
-import {Paginator} from "primereact/paginator";
-import TableComponent from "../TableComponent/TableComponent";
 import useWindowSize from "../Hooks/useWindowSize/useWindowSize";
-import {createContext} from "vm";
+import {ContentComponent} from "../HeaderComponent/ContentComponent";
+
 
 interface Data {
     id: string;
@@ -16,31 +14,23 @@ interface Data {
     avatar: string;
 }
 
-interface DataProviderProps {
-    viewType: 'card' | 'table';
-}
 
-export const DataContext = createContext((searchText: string) => {});
-
-
-const DataProvider: React.FC<DataProviderProps> = ({ viewType }) => {
+const ArrayProvider: React.FC = () => {
     const [data, setData] = useState<Data[]>([]);
+    const [tableData, setTableData] = useState<Data[]>([]);
+    const [cardData, setCardData] = useState<Data[]>([]);
     const [first, setFirst] = useState(0);
     let { height = 0 } = useWindowSize();
-    //задать высоту строк напрямую - костыльно, но танцевать с рефами для получения данных из библиотечного компонента в данном случае посчитал излишним
+
     const rowHeight = 95;
     const cardsCount = 12;
     const tableRows = Math.floor(height / rowHeight);
-    const [rows, setRows] = useState((viewType === 'card') ? cardsCount : tableRows);
-
-    const [filteredData, setFilteredData] = useState<Data[]>([]);
 
     const filterData = (searchText: string) => {
         const filtered = data.filter(item => item.message.includes(searchText));
-        setFilteredData(filtered);
+        setTableData(filtered.slice(first, first + tableRows));
+        setCardData(filtered.slice(first, first + cardsCount));
     };
-
-
 
     const formatDate = (date: Date) => {
         const day = date.getDate().toString().padStart(2, '0');
@@ -66,33 +56,34 @@ const DataProvider: React.FC<DataProviderProps> = ({ viewType }) => {
             });
 
             setData(data);
-            setFilteredData(data);
+            setTableData(data.slice(first, first + tableRows));
+            setCardData(data.slice(first, first + cardsCount));
         }
 
         fetchData();
-    }, []);
+    }, [first, tableRows]);
 
-
-    useEffect(() => {
-        setRows((viewType === 'card') ? cardsCount : tableRows);
-    }, [viewType, height]);
-
-    const dataToDisplay = filteredData.slice(first, first + rows);
+    console.log(tableData)
 
     const onPageChange = (event: { first: number; rows: number; }) => {
         setFirst(event.first);
-        setRows(event.rows)
+        filterData("");
     };
 
     return (
-        <DataContext.Provider value={{ filterData }}>
-            <div>
-                {viewType === 'card' && <CardComponent data={dataToDisplay}/>}
-                {viewType === 'table' && <TableComponent data={dataToDisplay}/>}
-                <Paginator first={first} rows={rows} totalRecords={data.length} onPageChange={onPageChange}/>
-            </div>
-        </DataContext.Provider>
+        <div>
+            <ContentComponent
+                onSearch={filterData}
+                tableData={tableData}
+                cardData={cardData}
+                rowsTable={tableRows}
+                rowsCard={cardsCount}
+                totalRecords={data.length}
+                onChange={onPageChange}
+                first={first}
+            />
+        </div>
     );
 };
 
-export default DataProvider;
+export default ArrayProvider;

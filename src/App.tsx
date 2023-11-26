@@ -3,7 +3,8 @@ import './App.css';
 import styled from 'styled-components';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
-import {HeaderComponent} from "../src/Components/HeaderComponent/HeaderComponent";
+import {ContentComponent} from "./Components/HeaderComponent/ContentComponent";
+import ArrayProvider from "./Components/ArrayProvider/ArrayProvider";
 
 
 const Container = styled.div`
@@ -15,10 +16,9 @@ function App() {
   return (
       <>
       <Container>
-          <HeaderComponent/>
+          <ArrayProvider/>
       </Container>
       </>
   );
 }
-
 export default App;

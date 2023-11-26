@@ -45,7 +45,7 @@ const TableComponent: React.FC<CardComponentProps> = ({ data }) => {
     const [rows, setRows] = useState(10);
     const [read, setRead] = useState<Record<string, boolean>>({});
     const [activeRowId, setActiveRowId] = useState<string | null>(null);
-    const rowRef = useRef<HTMLTableRowElement>(null);
+
 
     useEffect(() => {
         function handleKeyDown(e: KeyboardEvent) {
