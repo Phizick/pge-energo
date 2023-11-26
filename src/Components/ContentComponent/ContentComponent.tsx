@@ -79,11 +79,15 @@ export const ContentComponent: React.FC<ContentComponentProps> = ({ onSearch, ca
             <TabView renderActiveOnly={false}>
                 <TabPanel header={'Таблица'}>
                     <TableComponent data={tableData}/>
-                    <Paginator first={first} rows={rowsTable} totalRecords={totalRecords} onPageChange={onChange}/>
+                    <div style={{ float: 'right' }}>
+                        <Paginator first={first} rows={rowsTable} totalRecords={totalRecords} onPageChange={onChange}/>
+                    </div>
                 </TabPanel>
                 <TabPanel header={'Карточки'}>
                     <CardComponent data={cardData}/>
+                    <div style={{ float: 'right' }}>
                     <Paginator first={first} rows={rowsCard} totalRecords={totalRecords} onPageChange={onChange}/>
+                    </div>
                 </TabPanel>
             </TabView>
             <SearchContainer>

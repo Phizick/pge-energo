@@ -3,7 +3,7 @@ import './App.css';
 import styled from 'styled-components';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
-import {ContentComponent} from "./Components/HeaderComponent/ContentComponent";
+import {ContentComponent} from "./Components/ContentComponent/ContentComponent";
 import ArrayProvider from "./Components/ArrayProvider/ArrayProvider";
 
 

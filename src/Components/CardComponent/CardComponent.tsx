@@ -61,7 +61,8 @@ const TextContent = styled.p`
     padding-right: 10px;    
     overflow: hidden;
     text-overflow: ellipsis;
-    ${Object.entries(TEXT_STYLES.TEXT_NORMAL).map(([key, value]) => `${key}: ${value};`).join('\n')}  
+    ${Object.entries(TEXT_STYLES.TEXT_NORMAL).map(([key, value]) => `${key}: ${value};`).join('\n')};
+    max-height: 50px;    
 `;
 
 const LabelContainer = styled.div`
@@ -80,7 +81,7 @@ const Label = styled.label`
 const CardComponent: React.FC<CardComponentProps> = ({ data }) => {
     const [checked, setChecked] = useState<Record<string, boolean>>({});
     const [read, setAsRead] = useRead();
-    const [activeElementId, setActiveElementId] = useActive(setAsRead);
+    const [, setActiveElementId] = useActive(setAsRead);
 
     const handleCheckboxChange = (e: { checked?: boolean }, id: string) => {
         setChecked(prev => ({ ...prev, [id]: !!e.checked }));

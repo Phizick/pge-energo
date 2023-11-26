@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fakerRU }  from '@faker-js/faker';
 import useWindowSize from "../Hooks/useWindowSize/useWindowSize";
-import {ContentComponent} from "../HeaderComponent/ContentComponent";
+import {ContentComponent} from "../ContentComponent/ContentComponent";
 
 
 interface Data {
@@ -21,8 +21,8 @@ const ArrayProvider: React.FC = () => {
     const [cardData, setCardData] = useState<Data[]>([]);
     const [first, setFirst] = useState(0);
     let { height = 0 } = useWindowSize();
-
-    const rowHeight = 95;
+    //хардкодить высоту строки - моветон, но вытаскивать ее из библиотечного компонента через рефы посчитал тут излишним
+    const rowHeight = 105;
     const cardsCount = 12;
     const tableRows = Math.floor(height / rowHeight);
 
@@ -42,12 +42,13 @@ const ArrayProvider: React.FC = () => {
     };
 
     useEffect(() => {
+        const importanceLevels = ['высокая', 'низкая', 'критическая'];
         const fetchData = () => {
             const data = Array.from({length: 50}, (_, i) => {
                 return {
                     id: i.toString(),
                     date: formatDate(new Date()),
-                    importance: '50',
+                    importance: importanceLevels[Math.floor(Math.random()*importanceLevels.length)],
                     equipment: fakerRU.commerce.productName(),
                     message: fakerRU.lorem.sentence(),
                     responsible: fakerRU.person.firstName(),
