@@ -1,24 +1,8 @@
 import {createGlobalStyle} from "styled-components";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
-
-
-
-interface Data {
-    id: string;
-    date: string;
-    importance: string;
-    equipment: string;
-    message: string;
-    responsible: string;
-    avatar: string;
-}
-
-interface CardComponentProps {
-    data: Data[];
-}
-
+import { RenderComponentProps } from '../../Constants/Interfaces/Interfaces';
 
 const GlobalStyle = createGlobalStyle`
   .read-row {    
@@ -40,9 +24,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const TableComponent: React.FC<CardComponentProps> = ({ data }) => {
-    const [first, setFirst] = useState(0);
-    const [rows, setRows] = useState(10);
+const TableComponent: React.FC<RenderComponentProps> = ({ data }) => {
     const [read, setRead] = useState<Record<string, boolean>>({});
     const [activeRowId, setActiveRowId] = useState<string | null>(null);
 
@@ -76,7 +58,6 @@ const TableComponent: React.FC<CardComponentProps> = ({ data }) => {
         width: 'max-content'
     };
 
-
     return (
         <>
             <GlobalStyle />
@@ -96,6 +77,5 @@ const TableComponent: React.FC<CardComponentProps> = ({ data }) => {
         </>
     );
 }
-
 
 export default TableComponent

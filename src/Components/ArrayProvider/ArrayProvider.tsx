@@ -2,18 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fakerRU }  from '@faker-js/faker';
 import useWindowSize from "../Hooks/useWindowSize/useWindowSize";
 import {ContentComponent} from "../ContentComponent/ContentComponent";
-
-
-interface Data {
-    id: string;
-    date: string;
-    importance: string;
-    equipment: string;
-    message: string;
-    responsible: string;
-    avatar: string;
-}
-
+import { Data } from '../../Constants/Interfaces/Interfaces';
 
 const ArrayProvider: React.FC = () => {
     const [data, setData] = useState<Data[]>([]);

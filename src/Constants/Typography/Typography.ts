@@ -10,4 +10,4 @@ export const TEXT_STYLES: Record<string, any> = {
     'font-weight': '400',
     'line-height': '24px',
   }
-}
+};

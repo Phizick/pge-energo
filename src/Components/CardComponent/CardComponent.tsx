@@ -5,21 +5,7 @@ import { Card } from 'primereact/card';
 import {useRead} from "../Hooks/useRead/useRead";
 import {useActive} from "../Hooks/useActive/useActive";
 import {TEXT_STYLES} from "../../Constants/Typography/Typography";
-
-
-interface Data {
-    id: string;
-    date: string;
-    importance: string;
-    equipment: string;
-    message: string;
-    responsible: string;
-    avatar: string;
-}
-
-interface CardComponentProps {
-    data: Data[];
-}
+import { RenderComponentProps } from '../../Constants/Interfaces/Interfaces';
 
 
 const CardsContainer = styled.div`
@@ -78,7 +64,7 @@ const Label = styled.label`
 `;
 
 
-const CardComponent: React.FC<CardComponentProps> = ({ data }) => {
+const CardComponent: React.FC<RenderComponentProps> = ({ data }) => {
     const [checked, setChecked] = useState<Record<string, boolean>>({});
     const [read, setAsRead] = useRead();
     const [, setActiveElementId] = useActive(setAsRead);

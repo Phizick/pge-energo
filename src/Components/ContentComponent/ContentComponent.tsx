@@ -8,44 +8,25 @@ import TableComponent from "../TableComponent/TableComponent";
 import CardComponent from "../CardComponent/CardComponent";
 import { InputText } from "primereact/inputtext";
 import {Paginator} from "primereact/paginator";
-
-interface DataContent {
-    id: string;
-    date: string;
-    importance: string;
-    equipment: string;
-    message: string;
-    responsible: string;
-    avatar: string;
-}
+import { ContentComponentProps } from '../../Constants/Types/Types';
 
 
-type ContentComponentProps = {
-    onSearch: (searchValue: string) => void;
-    tableData: DataContent[];
-    cardData: DataContent[];
-    rowsTable: number;
-    rowsCard: number;
-    totalRecords: number;
-    onChange: (event: { first: number, rows: number }) => void;
-    first: number;
-};
 
 const HeaderContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  position: relative; 
-  margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative; 
+    margin-top: 50px;
 `;
 
 const SearchContainer = styled.div`
-  position: absolute; 
-  right: 0;          
-  padding-left: 20px;
-  box-sizing: border-box;
-  gap: 15px;
-  display: flex;
+    position: absolute; 
+    right: 0;          
+    padding-left: 20px;
+    box-sizing: border-box;
+    gap: 15px;
+    display: flex;
 `;
 
 
